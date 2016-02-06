@@ -152,6 +152,7 @@ class Message(Message, Serializable):
     :ivar offset: The offset of the message
     :ivar partition_id: The id of the partition to which this message belongs
     :ivar delivery_report_q: For use by :class:`pykafka.producer.Producer`
+    :ivar callback: For use by :class:`pykafka.producer.Producer`
     """
     MAGIC = 0
 
@@ -163,7 +164,8 @@ class Message(Message, Serializable):
         "partition_id",
         "partition",
         "produce_attempt",
-        "delivery_report_q"
+        "delivery_report_q",
+        "callback"
     ]
 
     def __init__(self,
@@ -173,7 +175,8 @@ class Message(Message, Serializable):
                  offset=-1,
                  partition_id=-1,
                  produce_attempt=0,
-                 delivery_report_q=None):
+                 delivery_report_q=None,
+                 callback=None):
         self.compression_type = compression_type
         self.partition_key = partition_key
         self.value = value
@@ -186,6 +189,7 @@ class Message(Message, Serializable):
         self.produce_attempt = produce_attempt
         # delivery_report_q is used by the producer
         self.delivery_report_q = delivery_report_q
+        self.callback = callback
 
     def __len__(self):
         size = 4 + 1 + 1 + 4 + 4

@@ -267,7 +267,7 @@ class Producer(object):
                 for queue_reader in queue_readers:
                     queue_reader.join()
 
-    def produce(self, message, partition_key=None):
+    def produce(self, message, partition_key=None, callback=None):
         """Produce a message.
 
         :param message: The message to produce (use None to send null)
@@ -275,6 +275,8 @@ class Producer(object):
         :param partition_key: The key to use when deciding which partition to send this
             message to
         :type partition_key: bytes
+        :param callback: function to call upon delivery receipt
+        :type callback: callable
         """
         if not (isinstance(partition_key, bytes) or partition_key is None):
             raise TypeError("Producer.produce accepts a bytes object as partition_key, "
@@ -292,7 +294,8 @@ class Producer(object):
                       partition_id=partition_id,
                       # We must pass our thread-local Queue instance directly,
                       # as results will be written to it in a worker thread
-                      delivery_report_q=self._delivery_reports.queue)
+                      delivery_report_q=self._delivery_reports.queue,
+                      callback=callback)
         self._produce(msg)
 
         if self._synchronous:
@@ -373,6 +376,8 @@ class Producer(object):
             owned_broker.increment_messages_pending(-1 * len(message_batch))
             req.delivered += len(message_batch)
             for msg in message_batch:
+                if msg.callback:
+                    msg.callback()
                 self._delivery_reports.put(msg)
 
         try:
