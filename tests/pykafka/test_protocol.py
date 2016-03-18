@@ -105,7 +105,8 @@ class TestFetchAPI(unittest2.TestCase):
             'partition_id': 0,
             'produce_attempt': 0,
             'delivery_report_q': None,
-            'partition': None
+            'partition': None,
+            'callback': None
         }, {
             'partition_key': b'test_key',
             'compression_type': 0,
@@ -114,7 +115,8 @@ class TestFetchAPI(unittest2.TestCase):
             'partition_id': 0,
             'produce_attempt': 0,
             'delivery_report_q': None,
-            'partition': None
+            'partition': None,
+            'callback': None
         }, {
             'partition_key': None,
             'compression_type': 0,
@@ -123,7 +125,8 @@ class TestFetchAPI(unittest2.TestCase):
             'partition_id': 0,
             'produce_attempt': 0,
             'delivery_report_q': None,
-            'partition': None
+            'partition': None,
+            'callback': None
         }]
 
     def msg_to_dict(self, msg):
